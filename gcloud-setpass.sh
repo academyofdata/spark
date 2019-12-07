@@ -5,6 +5,6 @@ NODES=$(gcloud compute instances list --format="csv[no-heading](zone,name)" --fi
 
 for N in ${NODES}
 do
-  echo "running on ${N}"
-  #gcloud compute ssh ${N} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/config-setpass.sh | bash -s -- $1 $2"
+  echo "running with ${N}"
+  awk -F, '{print "gcloud compute ssh " $1 " --zone " $2 " --command \"wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/config-setpass.sh | bash -s -- $1 $2 \" "'
 done
