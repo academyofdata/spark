@@ -9,6 +9,7 @@ DOWNLOADURL="https://archive.apache.org/dist/spark/spark-${SPARK_VER}/spark-${SP
 echo "Downloading Apache Spark ${SPARK_VER}..."
 sudo wget -q -O /opt/spark.tgz ${DOWNLOADURL}
 echo "Unpacking Spark into /opt/spark"
-sudo tar -xzf /opt/spark.tgz
+sudo tar -xzf /opt/spark.tgz --directory /opt
+sudo ln -s /opt/spark-${SPARK_VER}-bin-hadoop${HADOOP_VER} /opt/spark
 
 
