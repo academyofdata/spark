@@ -53,7 +53,7 @@ fi
 
 if [ ! -z "$masterurl" ];
 then
-  MEM=$(grep MemTotal /proc/meminfo | awk '{print int($2 * $MEMFACTOR / 1024) }')
+  MEM=$(grep MemTotal /proc/meminfo | awk -v mem="${MEMFACTOR}" '{print int($2 * mem / 1024) }')
   CORES=$(grep -Pc '^processor\t' /proc/cpuinfo)
   echo "Starting a Worker with ${MEM} MB (${MEMFACTOR} of total memory), ${CORES} cores and master ${masterurl}"
   sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M ${masterurl}
