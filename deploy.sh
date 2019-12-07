@@ -40,19 +40,22 @@ sudo tar -xzf /opt/spark.tgz --directory /opt
 echo "Making Spark available in /opt/spark"
 sudo ln -s /opt/spark-${SPARK_VER}-bin-hadoop${HADOOP_VER} /opt/spark
 
+MEMFACTOR=0.8
+
 if [ "$master" = "yes" ]; then
   echo "Starting Spark Master ..."
   sudo /opt/spark/sbin/start-master.sh
   #point the slave to this master
   masterurl=$(hostname --ip-address)
   masterurl="spark://${masterurl}:7077"
+  MEMFACTOR=0.66
 fi
 
 if [ ! -z "$masterurl" ];
 then
-  MEM=$(grep MemTotal /proc/meminfo | awk '{print int($2 * 0.66 / 1024) }')
+  MEM=$(grep MemTotal /proc/meminfo | awk '{print int($2 * $MEMFACTOR / 1024) }')
   CORES=$(grep -Pc '^processor\t' /proc/cpuinfo)
-  echo "Starting a Worker with ${MEM} MB (66% of total memory), ${CORES} cores and master ${masterurl}"
+  echo "Starting a Worker with ${MEM} MB (${MEMFACTOR} of total memory), ${CORES} cores and master ${masterurl}"
   sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M ${masterurl}
 fi
 
