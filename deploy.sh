@@ -14,5 +14,9 @@ echo "Making Spark available in /opt/spark"
 sudo ln -s /opt/spark-${SPARK_VER}-bin-hadoop${HADOOP_VER} /opt/spark
 echo "Starting Spark Master ..."
 sudo /opt/spark/sbin/start-master.sh 
+echo "Starting a Worker with 66% of total memory"
+MEM=$(grep MemTotal /proc/meminfo | awk '{print int($2 * 0.66 / 1024) }')
+CORES=$(grep -Pc '^processor\t' /proc/cpuinfo)
+sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M
 
 
