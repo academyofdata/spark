@@ -1,6 +1,6 @@
 #!/bin/bash
 
-options=$(getopt -l "java,master,slave:" -o "jms:" -a -- "$@")
+options=$(getopt -l "java,master,slaveof:" -o "jms:" -a -- "$@")
 eval set -- "$options"
 
 while true
