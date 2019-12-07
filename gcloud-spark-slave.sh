@@ -14,7 +14,7 @@ echo "waiting for the machine to boot"
 sleep 30
 
 echo "finding internal address of the master"
-MASTERIP=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
+MASTERIP=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="get(networkInterfaces[0].networkIP)")
 echo "master IP is ${MASTERIP}"
 
 echo "installing spark on remote node"
