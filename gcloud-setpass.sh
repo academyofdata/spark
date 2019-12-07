@@ -5,5 +5,5 @@ NODES=$(gcloud compute instances list --format="value(name)" --filter="status=RU
 
 for N in ${NODES}
 do
-  echo "running on ${N}
+  echo "running on ${N}"
 done
