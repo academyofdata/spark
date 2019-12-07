@@ -9,7 +9,7 @@ fi
 
 echo "using ${NODE} as instance name"
 
-gcloud compute instances create ${NODE} --zone ${ZONE} --machine-type ${MACHINE} --maintenance-policy "MIGRATE" --image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts" --boot-disk-size "40" --boot-disk-type "pd-standard" --boot-disk-device-name "${NODE}disk" --labels "sparkmaster=true"
+gcloud compute instances create ${NODE} --zone ${ZONE} --machine-type ${MACHINE} --maintenance-policy "MIGRATE" --image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts" --boot-disk-size "40" --boot-disk-type "pd-standard" --boot-disk-device-name "${NODE}disk" --labels "sparkslave=true"
 echo "waiting for the machine to boot"
 sleep 30
 
