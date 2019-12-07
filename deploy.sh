@@ -10,6 +10,9 @@ echo "Downloading Apache Spark ${SPARK_VER}..."
 sudo wget -q -O /opt/spark.tgz ${DOWNLOADURL}
 echo "Unpacking Spark into /opt/spark"
 sudo tar -xzf /opt/spark.tgz --directory /opt
+echo "Making Spark available in /opt/spark"
 sudo ln -s /opt/spark-${SPARK_VER}-bin-hadoop${HADOOP_VER} /opt/spark
+echo "Starting Spark Master ..."
+sudo /opt/spark/sbin/start-master.sh 
 
 
