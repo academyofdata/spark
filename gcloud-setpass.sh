@@ -1,7 +1,7 @@
 #!/bin/bash
 LABEL="aodcluster"
 
-NODES=$(gcloud compute instances list --format="csv[no-heading](zone,name)" --filter="status=RUNNING AND labels.${LABEL}=true")
+NODES=$(gcloud compute instances list --format="csv[no-heading](name,zone)" --filter="status=RUNNING AND labels.${LABEL}=true")
 
 for N in ${NODES}
 do
