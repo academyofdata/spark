@@ -18,9 +18,11 @@ sudo /opt/spark/sbin/start-master.sh
 
 MEM=$(grep MemTotal /proc/meminfo | awk '{print int($2 * 0.66 / 1024) }')
 CORES=$(grep -Pc '^processor\t' /proc/cpuinfo)
+MASTER=$(hostname --ip-address)
+MASTER="spark://${MASTER}:7077"
 
-echo "Starting a Worker with ${MEM} MB (66% of total memory) and ${CORES} cores"
+echo "Starting a Worker with ${MEM} MB (66% of total memory), ${CORES} cores and master ${MASTER}"
 
-sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M
+sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M ${MASTER}
 
 
