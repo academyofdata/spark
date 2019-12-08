@@ -34,7 +34,9 @@ fi
 echo "getting Zeppelin Archive"
 sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
 echo "unpacking..."
-sudo tar -xzvf /opt/zeppelin.tgz
+sudo tar -xzf /opt/zeppelin.tgz
+sudo ln -s /opt/zeppelin-${ZEP_VER}-bin-all /opt/zeppelin
+
 #enable authentication
 sudo cp /opt/zeppelin/conf/shiro.ini.template /opt/zeppelin/conf/shiro.ini
 #the Apache shiro template comes with a bunch of users pre-defined, remove them
