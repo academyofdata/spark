@@ -2,7 +2,7 @@
 #script that installs zeppelin with all dependencies and starts it
 ZEP_VER="0.8.2"
 
-options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:get" -o "s:c:p:m:d:g" -a -- "$@")
+options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:nodownload" -o "s:c:p:m:d:n" -a -- "$@")
 eval set -- "$options"
 
 export port=9090
