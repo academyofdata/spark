@@ -32,7 +32,7 @@ else
 fi
 
 echo "getting Zeppelin Archive"
-sudo wget -q O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
+sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
 echo "unpacking..."
 sudo tar -xzvf /opt/zeppelin.tgz
 #enable authentication
