@@ -90,6 +90,9 @@ then
     jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
     jq ".interpreterSettings.cassandra.properties[\"cassandra.cluster\"].value = \"CassandraTraining\"" |
     jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" | sudo tee /tmp/interpreter.json
+    orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
+    mod=$(stat --printf="%s" /tmp/interpreter.json)
+    echo "replacing json ${orig} -> ${mod}"
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
     restart="yes"
 fi
@@ -114,6 +117,10 @@ then
       jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter.json | sudo tee /tmp/interpreter.json
     done
     set +f; unset IFS
+    orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
+    mod=$(stat --printf="%s" /tmp/interpreter.json)
+    echo "replacing json ${orig} -> ${mod}"
+
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
     
     restart="yes"
