@@ -105,6 +105,7 @@ then
 fi
 if [ ! -z "$dependencies" ]
 then
+    echo "Adding spark dependencies..."
     sudo cp /opt/zeppelin/conf/interpreter.json /tmp/interpreter.json
     set -f; IFS=','
     set -- $dependencies
