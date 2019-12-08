@@ -104,7 +104,7 @@ then
     set -- $dependencies
     for dep in "$@"
     do
-      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter.json > /tmp/interpreter.json
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter.json | sudo tee /tmp/interpreter.json
     done
     set +f; unset IFS
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
