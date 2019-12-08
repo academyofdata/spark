@@ -55,8 +55,9 @@ sudo cp /opt/zeppelin/conf/zeppelin-site.xml.template /opt/zeppelin/conf/zeppeli
 sudo sed -i '/zeppelin.anonymous.allowed/{n;s/.*/<value>false<\/value>/}' /opt/zeppelin/conf/zeppelin-site.xml
 #change port
 sudo sed -i "/zeppelin.server.port/{n;s/.*/<value>${port}<\/value>/}" /opt/zeppelin/conf/zeppelin-site.xml
-#make the server avail on every interface (this _might_ be a problem outside GCE!)
-sudo sed -i "/zeppelin.server.addr/{n;s/.*/<value>0.0.0.0<\/value>/}" /opt/zeppelin/conf/zeppelin-site.xml
+#make the server avail on the internal interface, not on localhost
+iface=$(hostname --ip-address)
+sudo sed -i "/zeppelin.server.addr/{n;s/.*/<value>${iface}<\/value>/}" /opt/zeppelin/conf/zeppelin-site.xml
 
 echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
