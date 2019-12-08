@@ -94,7 +94,7 @@ then
     restart="yes"
 fi
 
-if [ "$restart" = "yes"]; then
+if [ "$restart" = "yes" ]; then
     sudo echo "re-starting daemon..."
     sudo /opt/zeppelin/bin/zeppelin-daemon.sh restart
 fi
