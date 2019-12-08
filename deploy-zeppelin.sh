@@ -68,13 +68,18 @@ sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
 
 if [ ! -z "$cassandra" ]
 then
+  apt-get install -y jq
 	echo "waiting for Zeppelin to start to set Cassandra host and dependencies..."
 	#wait untin Zeppelin starts and creates the interpreter.json file
-	sleep 45
-	sudo sed -i "s/\"cassandra.hosts\": \"localhost\"/\"cassandra.hosts\": \"${cassandra}\"/g" /opt/zeppelin/conf/interpreter.json
-	sudo sed -i "s/\"cassandra.cluster\": \"Test Cluster\"/\"cassandra.cluster\": \"CassandraTraining\"/g" /opt/zeppelin/conf/interpreter.json
-	sudo sed -i "s/\"spark.cores.max\": \"\"/\"spark.cores.max\": \"\",\"spark.cassandra.connection.host\": \"${cassandra}}\"/g" /opt/zeppelin/conf/interpreter.json
-	sudo echo "re-starting daemon..."
+	sleep 30
+	#sudo sed -i "s/\"cassandra.hosts\": \"localhost\"/\"cassandra.hosts\": \"${cassandra}\"/g" /opt/zeppelin/conf/interpreter.json
+	#sudo sed -i "s/\"cassandra.cluster\": \"Test Cluster\"/\"cassandra.cluster\": \"CassandraTraining\"/g" /opt/zeppelin/conf/interpreter.json
+	#sudo sed -i "s/\"spark.cores.max\": \"\"/\"spark.cores.max\": \"\",\"spark.cassandra.connection.host\": \"${cassandra}}\"/g" /opt/zeppelin/conf/interpreter.json
+  jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
+  jq ".interpreterSettings.cassandra.properties[\"cassandra.cluster\"].value = \"CassandraTraining\"" |
+  jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" > /tmp/interpreter.json
+  	
+  sudo echo "re-starting daemon..."
 	sudo /opt/zeppelin/bin/zeppelin-daemon.sh restart
 
 fi
