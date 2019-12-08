@@ -69,25 +69,35 @@ sudo sed -i "/zeppelin.server.addr/{n;s/.*/<value>${iface}<\/value>/}" /opt/zepp
 echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
 
-
+restart="no"
+apt-get update
+apt-get install -y jq
 
 if [ ! -z "$cassandra" ]
 then
-    apt-get install -y jq
     echo "waiting for Zeppelin to start to set Cassandra host and dependencies..."
     #wait untin Zeppelin starts and creates the interpreter.json file
     sleep 30
-    #sudo sed -i "s/\"cassandra.hosts\": \"localhost\"/\"cassandra.hosts\": \"${cassandra}\"/g" /opt/zeppelin/conf/interpreter.json
-    #sudo sed -i "s/\"cassandra.cluster\": \"Test Cluster\"/\"cassandra.cluster\": \"CassandraTraining\"/g" /opt/zeppelin/conf/interpreter.json
-    #sudo sed -i "s/\"spark.cores.max\": \"\"/\"spark.cores.max\": \"\",\"spark.cassandra.connection.host\": \"${cassandra}}\"/g" /opt/zeppelin/conf/interpreter.json
     jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
     jq ".interpreterSettings.cassandra.properties[\"cassandra.cluster\"].value = \"CassandraTraining\"" |
     jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" > /tmp/interpreter.json
-      
-    sudo echo "re-starting daemon..."
-    sudo /opt/zeppelin/bin/zeppelin-daemon.sh restart
+    sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    restart="yes"
+fi
+if [ ! -z "$master" ]
+    jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json > /tmp/interpreter.json
+    sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    
+    #we rely on the fact that a spark instalation already exists in /opt/spark
+    echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
+    restart="yes"
+then
 
 fi
 
+if [ "$restart" = "yes"]; then
+    sudo echo "re-starting daemon..."
+    sudo /opt/zeppelin/bin/zeppelin-daemon.sh restart
+fi
 #enable automatic start at boot
 sudo sed -i "$ i/opt/zeppelin-${ZEP_VER}-bin-all/bin/zeppelin-daemon.sh start" /etc/rc.local
