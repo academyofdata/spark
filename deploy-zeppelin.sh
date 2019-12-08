@@ -75,7 +75,7 @@ then
 	sudo sed -i "s/\"cassandra.cluster\": \"Test Cluster\"/\"cassandra.cluster\": \"CassandraTraining\"/g" /opt/zeppelin/conf/interpreter.json
 	sudo sed -i "s/\"spark.cores.max\": \"\"/\"spark.cores.max\": \"\",\"spark.cassandra.connection.host\": \"${cassandra}}\"/g" /opt/zeppelin/conf/interpreter.json
 	sudo echo "re-starting daemon..."
-	/opt/zeppelin/bin/zeppelin-daemon.sh restart
+	sudo /opt/zeppelin/bin/zeppelin-daemon.sh restart
 
 fi
 
