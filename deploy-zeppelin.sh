@@ -2,17 +2,20 @@
 #script that installs zeppelin with all dependencies and starts it
 ZEP_VER="0.8.2"
 
-options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:" -o "s:c:p:m:d:" -a -- "$@")
+options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:get" -o "s:c:p:m:d:g" -a -- "$@")
 eval set -- "$options"
 
 export port=9090
-
+export download=yes
 while true
 do
   case $1 in
     -s|--setpass)
         shift
         export password=$1
+        ;;
+    -n|--nodownload)
+        export download=no
         ;;
     -p|--port)
         shift
@@ -44,13 +47,15 @@ else
 	PASSWORD='zeplnp@ss'
 fi
 
-echo "getting Zeppelin Archive"
-sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
-echo "Unpacking Zeppelin into /opt"
-sudo tar -xzf /opt/zeppelin.tgz --directory /opt
-echo "Making Zeppelin available in /opt/zeppelin"
-sudo ln -s /opt/zeppelin-${ZEP_VER}-bin-all /opt/zeppelin
-
+if [ "$download" = "yes" ]
+then
+  echo "getting Zeppelin Archive"
+  sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
+  echo "Unpacking Zeppelin into /opt"
+  sudo tar -xzf /opt/zeppelin.tgz --directory /opt
+  echo "Making Zeppelin available in /opt/zeppelin"
+  sudo ln -s /opt/zeppelin-${ZEP_VER}-bin-all /opt/zeppelin
+fi
 #enable authentication
 sudo cp /opt/zeppelin/conf/shiro.ini.template /opt/zeppelin/conf/shiro.ini
 #the Apache shiro template comes with a bunch of users pre-defined, remove them
