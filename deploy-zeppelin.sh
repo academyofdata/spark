@@ -2,7 +2,7 @@
 #script that installs zeppelin with all dependencies and starts it
 ZEP_VER="0.8.2"
 
-options=$(getopt -l "setpass:,cassandra:,port:,master:" -o "s:c:p:m:" -a -- "$@")
+options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:" -o "s:c:p:m:d:" -a -- "$@")
 eval set -- "$options"
 
 export port=9090
@@ -25,6 +25,10 @@ do
     -m|--master)
         shift
         export master=$1
+        ;;
+    -d|--dependencies)
+        shift
+        export dependencies=$1
         ;;
     --)
         shift
@@ -91,6 +95,20 @@ then
     
     #we rely on the fact that a spark instalation already exists in /opt/spark
     echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
+    restart="yes"
+fi
+if [ ! -z "$dependencies" ]
+then
+    sudo cp /opt/zeppelin/conf/interpreter.json /tmp/interpreter.json
+    set -f; IFS=','
+    set -- $dependencies
+    for dep in "$@"
+    do
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter.json > /tmp/interpreter.json
+    done
+    set +f; unset IFS
+    sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    
     restart="yes"
 fi
 
