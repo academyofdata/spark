@@ -1,9 +1,12 @@
 #!/bin/bash
 ZONE="europe-west1-d"
 #we install on the same machine as spark master
-NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="get(networkInterfaces[0].networkIP)")
+MASTER=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="get(networkInterfaces[0].networkIP)")
+MASTER="spark://${MASTER}:7077"
 CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true" --format="get(networkInterfaces[0].networkIP)")
-MASTER="spark://${NODE}:7077"
+
+NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
+
 
 gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=zeppelin=true
 
