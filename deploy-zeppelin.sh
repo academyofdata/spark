@@ -33,8 +33,9 @@ fi
 
 echo "getting Zeppelin Archive"
 sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
-echo "unpacking..."
-sudo tar -xzf /opt/zeppelin.tgz
+echo "Unpacking Zeppelin into /opt"
+sudo tar -xzf /opt/zeppelin.tgz --directory /opt
+echo "Making Zeppelin available in /opt/zeppelin"
 sudo ln -s /opt/zeppelin-${ZEP_VER}-bin-all /opt/zeppelin
 
 #enable authentication
