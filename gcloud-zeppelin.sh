@@ -1,8 +1,8 @@
 #!/bin/bash
 ZONE="europe-west1-d"
-MASTER=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
+NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
 CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true" --format="value(name)")
-MASTER="spark://${MASTER}:7077"
+MASTER="spark://${NODE}:7077"
 
 
 echo "will install zeppelin with master ${MASTER} and cassandra node ${CASSANDRA} "
