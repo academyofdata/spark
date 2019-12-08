@@ -23,4 +23,4 @@ MASTERIP=$(gcloud compute instances list --filter="labels.sparkmaster=true" --fo
 echo "master IP is ${MASTERIP}"
 
 echo "installing and configuring Spark on remote node"
-gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy.sh | bash -s -- --java --slaveof spark://${MASTERIP}:7077"
+gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-spark.sh | bash -s -- --java --slaveof spark://${MASTERIP}:7077"
