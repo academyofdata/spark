@@ -2,9 +2,10 @@
 #script that installs zeppelin with all dependencies and starts it
 ZEP_VER="0.8.2"
 
-options=$(getopt -l "setpass:,cassandra:" -o "s:c:" -a -- "$@")
+options=$(getopt -l "setpass:,cassandra,port:" -o "s:c:p:" -a -- "$@")
 eval set -- "$options"
 
+export port=9090
 
 while true
 do
@@ -12,6 +13,10 @@ do
     -s|--setpass)
         shift
         export password=$1
+        ;;
+    -p|--port)
+        shift
+        export port=$1
         ;;
     -c|--cassandra)
         shift
@@ -48,6 +53,8 @@ sudo sed -i "s/password1/${PASSWORD}/g" /opt/zeppelin/conf/shiro.ini
 sudo cp /opt/zeppelin/conf/zeppelin-site.xml.template /opt/zeppelin/conf/zeppelin-site.xml
 #disable anonymous access
 sudo sed -i '/zeppelin.anonymous.allowed/{n;s/.*/<value>false<\/value>/}' /opt/zeppelin/conf/zeppelin-site.xml
+#change port
+sudo sed -i "/zeppelin.server.port/{n;s/.*/<value>${port}<\/value>/}" /opt/zeppelin/conf/zeppelin-site.xml
 
 echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
