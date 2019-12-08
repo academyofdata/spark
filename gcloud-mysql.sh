@@ -1,4 +1,4 @@
-ZONE="europe-west1-d"
+ZONE="europe-west4-b"
 NODE="mysql"
 MACHINE="g1-small"
 
