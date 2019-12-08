@@ -79,7 +79,7 @@ sudo apt-get install -y jq
 
 if [ ! -z "$cassandra" ]
 then
-    echo "waiting for Zeppelin to start to set Cassandra host and dependencies..."
+    echo "waiting for Zeppelin to start to set Cassandra host (${cassandra}) and dependencies..."
     #wait untin Zeppelin starts and creates the interpreter.json file
     sleep 30
     jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
@@ -90,6 +90,7 @@ then
 fi
 if [ ! -z "$master" ]
 then
+    echo "Setting spark master..."
     jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json > /tmp/interpreter.json
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
     
