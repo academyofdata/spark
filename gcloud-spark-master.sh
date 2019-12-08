@@ -20,7 +20,7 @@ echo "waiting for the machine to boot"
 sleep 30
 
 echo "installing spark on remote node"
-gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy.sh | bash -s -- --java --master"
+gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-spark.sh | bash -s -- --java --master"
 
 echo "finding internal address of the node"
 IPADDR=$(gcloud compute instances list --filter="name=${NODE}" --format="value(networkInterfaces[0].networkIP)")
