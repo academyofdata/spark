@@ -85,14 +85,13 @@ then
     restart="yes"
 fi
 if [ ! -z "$master" ]
+then
     jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json > /tmp/interpreter.json
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
     
     #we rely on the fact that a spark instalation already exists in /opt/spark
     echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
     restart="yes"
-then
-
 fi
 
 if [ "$restart" = "yes"]; then
