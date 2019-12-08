@@ -49,6 +49,9 @@ sudo cp /opt/zeppelin/conf/shiro.ini.template /opt/zeppelin/conf/shiro.ini
 sudo sed -i "/^user/d" /opt/zeppelin/conf/shiro.ini 
 # admin default password in shiro.ini is password1, change it to a value of our own
 sudo sed -i "s/password1/${PASSWORD}/g" /opt/zeppelin/conf/shiro.ini
+# remove the commen in the front of admin user so we enable login with 'admin'
+lineno=$(grep -n "zeplnp" /opt/zeppelin/conf/shiro.ini | awk -F: '{print $1}')
+sudo sed -i "${lineno}s/^#//" /opt/zeppelin/conf/shiro.ini
 
 sudo cp /opt/zeppelin/conf/zeppelin-site.xml.template /opt/zeppelin/conf/zeppelin-site.xml
 #disable anonymous access
