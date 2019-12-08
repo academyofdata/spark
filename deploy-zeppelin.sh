@@ -57,8 +57,8 @@ sudo sed -i "s/password1/${PASSWORD}/g" /opt/zeppelin/conf/shiro.ini
 lineno=$(grep -n "${PASSWORD}" /opt/zeppelin/conf/shiro.ini | awk -F: '{print $1}')
 sudo sed -i "${lineno}s/^#//" /opt/zeppelin/conf/shiro.ini
 
-  `sudo cp /opt/zeppelin/conf/zeppelin-site.xml.template /opt/zeppelin/conf/zeppelin-site.xml
-`#disable anonymous access
+sudo cp /opt/zeppelin/conf/zeppelin-site.xml.template /opt/zeppelin/conf/zeppelin-site.xml
+#disable anonymous access
 sudo sed -i '/zeppelin.anonymous.allowed/{n;s/.*/<value>false<\/value>/}' /opt/zeppelin/conf/zeppelin-site.xml
 #change port
 sudo sed -i "/zeppelin.server.port/{n;s/.*/<value>${port}<\/value>/}" /opt/zeppelin/conf/zeppelin-site.xml
