@@ -70,8 +70,8 @@ echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
 
 restart="no"
-apt-get update
-apt-get install -y jq
+sudo apt-get update
+sudo apt-get install -y jq
 
 if [ ! -z "$cassandra" ]
 then
