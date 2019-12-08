@@ -1,5 +1,6 @@
 #!/bin/bash
 ZONE="europe-west1-d"
+#we install on the same machine as spark master
 NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
 CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true" --format="value(name)")
 MASTER="spark://${NODE}:7077"
