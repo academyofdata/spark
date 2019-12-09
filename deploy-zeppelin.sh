@@ -101,8 +101,8 @@ fi
 if [ ! -z "$master" ]
 then
     echo "Setting spark master..."
-    jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json | sudo tee /tmp/interpreter.json
-    sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json | sudo tee /tmp/interpreter0.json
+    sudo cp /tmp/interpreter0.json /opt/zeppelin/conf/interpreter.json
     
     #we rely on the fact that a spark instalation already exists in /opt/spark
     echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
@@ -111,19 +111,19 @@ fi
 if [ ! -z "$dependencies" ]
 then
     echo "Adding spark dependencies..."
-    sudo cp /opt/zeppelin/conf/interpreter.json /tmp/interpreter.json
+    sudo cp /opt/zeppelin/conf/interpreter.json /tmp/interpreter1.json
     set -f; IFS=','
     set -- $dependencies
     for dep in "$@"
     do
-      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter.json | sudo tee /tmp/interpreter.json
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter1.json | sudo tee /tmp/interpreter1.json
     done
     set +f; unset IFS
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
     mod=$(stat --printf="%s" /tmp/interpreter.json)
     echo "replacing json ${orig} -> ${mod}"
 
-    sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    sudo cp /tmp/interpreter1.json /opt/zeppelin/conf/interpreter.json
     
     restart="yes"
 fi
