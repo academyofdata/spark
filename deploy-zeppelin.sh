@@ -79,7 +79,7 @@ sudo sed -i "/zeppelin.server.addr/{n;s/.*/<value>${iface}<\/value>/}" /opt/zepp
 
 echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
-sleep 15
+sleep 25
 restart="no"
 sudo apt-get update
 sudo apt-get install -y jq
