@@ -102,6 +102,9 @@ if [ ! -z "$master" ]
 then
     echo "Setting spark master..."
     jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json | sudo tee /tmp/interpreter0.json
+    orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
+    mod=$(stat --printf="%s" /tmp/interpreter0.json)
+    echo "replacing json ${orig} -> ${mod}"
     sudo cp /tmp/interpreter0.json /opt/zeppelin/conf/interpreter.json
     
     #we rely on the fact that a spark instalation already exists in /opt/spark
@@ -120,7 +123,7 @@ then
     done
     set +f; unset IFS
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
-    mod=$(stat --printf="%s" /tmp/interpreter.json)
+    mod=$(stat --printf="%s" /tmp/interpreter1.json)
     echo "replacing json ${orig} -> ${mod}"
 
     sudo cp /tmp/interpreter1.json /opt/zeppelin/conf/interpreter.json
