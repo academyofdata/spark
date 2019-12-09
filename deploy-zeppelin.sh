@@ -96,6 +96,7 @@ then
     mod=$(stat --printf="%s" /tmp/interpreter.json)
     echo "replacing json ${orig} -> ${mod}"
     sudo mv /tmp/interpreter.json /opt/zeppelin/conf/interpreter.json
+    sleep 1
     restart="yes"
 fi
 if [ ! -z "$master" ]
@@ -106,7 +107,7 @@ then
     mod=$(stat --printf="%s" /tmp/interpreter0.json)
     echo "replacing json ${orig} -> ${mod}"
     sudo cp /tmp/interpreter0.json /opt/zeppelin/conf/interpreter.json
-    
+    sleep 1
     #we rely on the fact that a spark instalation already exists in /opt/spark
     echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
     restart="yes"
@@ -127,7 +128,7 @@ then
     echo "replacing json ${orig} -> ${mod}"
 
     sudo cp /tmp/interpreter1.json /opt/zeppelin/conf/interpreter.json
-    
+    sleep 1
     restart="yes"
 fi
 
