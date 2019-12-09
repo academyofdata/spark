@@ -79,7 +79,7 @@ sudo sed -i "/zeppelin.server.addr/{n;s/.*/<value>${iface}<\/value>/}" /opt/zepp
 
 echo "starting daemon..."
 sudo /opt/zeppelin/bin/zeppelin-daemon.sh start
-
+sleep 15
 restart="no"
 sudo apt-get update
 sudo apt-get install -y jq
@@ -88,7 +88,7 @@ if [ ! -z "$cassandra" ]
 then
     echo "waiting for Zeppelin to start to set Cassandra host (${cassandra}) and dependencies..."
     #wait untin Zeppelin starts and creates the interpreter.json file
-    sleep 30
+ 
     jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
     jq ".interpreterSettings.cassandra.properties[\"cassandra.cluster\"].value = \"CassandraTraining\"" |
     jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" | sudo tee /tmp/interpreter.json
