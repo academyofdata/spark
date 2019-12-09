@@ -40,6 +40,8 @@ do
   shift
 done
 
+echo "got arguments: download=>${download}, dependencies=>${dependencies}, master=>${master}, port=>${port}, cassandra=>${cassandra}, password=>${password}"
+
 if [ ! -z "$password" ]
 then
 	PASSWORD=$password
