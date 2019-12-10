@@ -91,7 +91,7 @@ then
  
     jq ".interpreterSettings.cassandra.properties[\"cassandra.hosts\"].value = \"${cassandra}\"" /opt/zeppelin/conf/interpreter.json | 
     jq ".interpreterSettings.cassandra.properties[\"cassandra.cluster\"].value = \"CassandraTraining\"" |
-    jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" | sudo tee /tmp/interpreter.json
+    jq ".interpreterSettings.spark.properties[\"spark.cassandra.connection.host\"].value= \"${cassandra}\"" | sudo tee /tmp/interpreter.json > /dev/null
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
     mod=$(stat --printf="%s" /tmp/interpreter.json)
     echo "replacing json ${orig} -> ${mod}"
@@ -102,7 +102,7 @@ fi
 if [ ! -z "$master" ]
 then
     echo "Setting spark master..."
-    jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json | sudo tee /tmp/interpreter0.json
+    jq ".interpreterSettings.spark.properties.master.value = \"${master}\"" /opt/zeppelin/conf/interpreter.json | sudo tee /tmp/interpreter0.json > /dev/null
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
     mod=$(stat --printf="%s" /tmp/interpreter0.json)
     echo "replacing json ${orig} -> ${mod}"
@@ -120,7 +120,7 @@ then
     set -- $dependencies
     for dep in "$@"
     do
-      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter1.json | sudo tee /tmp/interpreter1.json
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter1.json | sudo tee /tmp/interpreter1.json > /dev/null
     done
     set +f; unset IFS
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
