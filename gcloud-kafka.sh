@@ -5,5 +5,5 @@ NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format
 
 gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=kafkabroker=true,zookeeper=true
 
-echo "will install kafka with on ${NODE}"
+echo "will install kafka on ${NODE}"
 gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-kafka.sh | bash -s -- --zep /opt/zeppelin"
