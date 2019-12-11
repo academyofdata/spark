@@ -1,9 +1,10 @@
 #!/bin/bash
 
-options=$(getopt -l "zep" -o "z" -a -- "$@")
+options=$(getopt -l "zep:" -o "z:" -a -- "$@")
 eval set -- "$options"
+echo "got:$options"
+zepdep="org.apache.spark:spark-streaming-kafka-0-10_2.11:2.3.0,org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0"
 
-zepdep="org.apache.spark:spark-streaming-kafka-0-10_2.11:2.3.0"
 while true
 do
   case $1 in
@@ -17,7 +18,7 @@ do
   esac
   shift
 done
-
+echo "parsed args..."
 KAFKA_VER="2.3.0"
 SCALA_VER="2.12"
 
@@ -41,10 +42,26 @@ if [ ! -z "$zep" ];
 then
     #add kafka dependency to zeppelin
     #assumes zeppelin runs on this server as well
-    echo "Adding dependency for Zeppelin..."
-    jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${zepdep}\",\"local\": false}]" ${zep}/conf/interpreter.json | sudo tee /tmp/interpreterk.json > /dev/null
+    echo "Adding dependencies for Zeppelin..."
+    cfile="/tmp/interpreterk.json"
+    sudo cp /opt/zeppelin/conf/interpreter.json ${cfile}
+    
+    set -f; IFS=','
+    set -- $zepdep
+    for dep in "$@"
+    do
+      echo "adding dependency: ${dep}..."
+      trim=$(echo ${dep}|tr -dc '[:alnum:]')
+      next="/tmp/${trim}.json"
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" ${cfile} | sudo tee ${next} > /dev/null
+      cfile=${next}
+      sleep 1
+    done
+    set +f; unset IFS    
     sudo cp /tmp/interpreterk.json ${zep}/conf/interpreter.json
     echo "Restarting zeppelin..."
     sudo ${zep}/bin/zeppelin-daemon.sh restart
+else
+    echo "not touching zeppelin (${zep})"
 fi 
 echo "done."
