@@ -18,3 +18,4 @@ sudo ./bin/zookeeper-server-start.sh config/zookeeper.properties >> /tmp/zookeep
 sleep 3
 echo "Starting Kafka broker..."
 sudo ./bin/kafka-server-start.sh config/server.properties >> /tmp/kafka.log 2>&1 &
+echo "done."
