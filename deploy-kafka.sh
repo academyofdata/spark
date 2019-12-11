@@ -1,5 +1,23 @@
 #!/bin/bash
 
+options=$(getopt -l "zep" -o "z" -a -- "$@")
+eval set -- "$options"
+
+zepdep="org.apache.spark:spark-streaming-kafka-0-10_2.11:2.3.0"
+while true
+do
+  case $1 in
+    -z|--zep)
+        shift
+        export zep=$1
+        ;;
+    --)
+        shift
+        break;;
+  esac
+  shift
+done
+
 KAFKA_VER="2.3.0"
 SCALA_VER="2.12"
 
@@ -18,4 +36,15 @@ sudo ./bin/zookeeper-server-start.sh config/zookeeper.properties >> /tmp/zookeep
 sleep 3
 echo "Starting Kafka broker..."
 sudo ./bin/kafka-server-start.sh config/server.properties >> /tmp/kafka.log 2>&1 &
+
+if [ ! -z "$zep" ];
+then
+    #add kafka dependency to zeppelin
+    #assumes zeppelin runs on this server as well
+    echo "Adding dependency for Zeppelin..."
+    jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${zepdep}\",\"local\": false}]" ${zep}/conf/interpreter.json | sudo tee /tmp/interpreterk.json > /dev/null
+    sudo cp /tmp/interpreterk.json ${zep}/conf/interpreter.json
+    echo "Restarting zeppelin..."
+    sudo ${zep}/bin/zeppelin-daemon.sh restart
+fi 
 echo "done."
