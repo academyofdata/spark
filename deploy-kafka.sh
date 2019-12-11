@@ -59,7 +59,7 @@ then
     set +f; unset IFS    
     sudo cp /tmp/interpreterk.json ${zep}/conf/interpreter.json
     
-    echo "export SPARK_SUBMIT_OPTIONS=\"--packages ${zepdep}\"" >> {$zep}/conf/zeppelin-env.sh
+    echo "export SPARK_SUBMIT_OPTIONS=\"--packages ${zepdep}\"" >> ${zep}/conf/zeppelin-env.sh
     
     echo "Restarting zeppelin..."
     sudo ${zep}/bin/zeppelin-daemon.sh restart
