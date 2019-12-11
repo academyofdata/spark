@@ -12,8 +12,8 @@ sudo tar -xzf /opt/kafka.tgz --directory /opt
 echo "Making Kafka available in /opt/kafka"
 sudo ln -s /opt/kafka_${SCALA_VER}-${KAFKA_VER} /opt/kafka
 
-echo "Starting zookeeper..."
 cd /opt/kafka
+echo "Starting zookeeper..."
 sudo ./bin/zookeeper-server-start.sh config/zookeeper.properties &
 sleep 3
 echo "Starting Kafka broker..."
