@@ -14,7 +14,7 @@ sudo ln -s /opt/kafka_${SCALA_VER}-${KAFKA_VER} /opt/kafka
 
 echo "Starting zookeeper..."
 cd /opt/kafka
-./bin/zookeeper-server-start.sh config/zookeeper.properties &
+sudo ./bin/zookeeper-server-start.sh config/zookeeper.properties &
 sleep 3
 echo "Starting Kafka broker..."
-./bin/kafka-server-start.sh config/server.properties
+sudo ./bin/kafka-server-start.sh config/server.properties &
