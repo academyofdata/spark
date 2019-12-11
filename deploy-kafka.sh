@@ -2,7 +2,6 @@
 
 options=$(getopt -l "zep:" -o "z:" -a -- "$@")
 eval set -- "$options"
-echo "got:$options"
 zepdep="org.apache.spark:spark-streaming-kafka-0-10_2.11:2.3.0,org.apache.spark:spark-sql-kafka-0-10_2.11:2.3.0"
 
 while true
@@ -11,7 +10,7 @@ do
     -z|--zep)
         shift
         export zep=$1
-        ;;
+        ;;  
     --)
         shift
         break;;
@@ -59,9 +58,11 @@ then
     done
     set +f; unset IFS    
     sudo cp /tmp/interpreterk.json ${zep}/conf/interpreter.json
+    
+    echo "export SPARK_SUBMIT_OPTIONS=\"--packages ${zepdep}\"" >> {$zep}/conf/zeppelin-env.sh
+    
     echo "Restarting zeppelin..."
     sudo ${zep}/bin/zeppelin-daemon.sh restart
-else
-    echo "not touching zeppelin (${zep})"
+
 fi 
 echo "done."
