@@ -115,19 +115,25 @@ fi
 if [ ! -z "$dependencies" ]
 then
     echo "Adding spark dependencies..."
-    sudo cp /opt/zeppelin/conf/interpreter.json /tmp/interpreter1.json
+    cfile="/tmp/interpreter1.json"
+    sudo cp /opt/zeppelin/conf/interpreter.json ${cfile}
+    
     set -f; IFS=','
     set -- $dependencies
     for dep in "$@"
     do
-      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" /tmp/interpreter1.json | sudo tee /tmp/interpreter1.json > /dev/null
+      echo "adding dependency: ${dep}..."
+      trim=$(echo ${dep}|tr -dc '[:alnum:]')
+      next="/tmp/${trim}.json"
+      jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" ${cfile} | sudo tee ${next} > /dev/null
+      cfile=${next}
     done
     set +f; unset IFS
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)
-    mod=$(stat --printf="%s" /tmp/interpreter1.json)
+    mod=$(stat --printf="%s" ${cfile})
     echo "replacing json ${orig} -> ${mod}"
 
-    sudo cp /tmp/interpreter1.json /opt/zeppelin/conf/interpreter.json
+    sudo cp ${cfile} /opt/zeppelin/conf/interpreter.json
     sleep 1
     restart="yes"
 fi
