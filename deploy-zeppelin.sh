@@ -127,6 +127,7 @@ then
       next="/tmp/${trim}.json"
       jq ".interpreterSettings.spark.dependencies += [{\"groupArtifactVersion\": \"${dep}\",\"local\": false}]" ${cfile} | sudo tee ${next} > /dev/null
       cfile=${next}
+      sleep 1
     done
     set +f; unset IFS
     orig=$(stat --printf="%s" /opt/zeppelin/conf/interpreter.json)

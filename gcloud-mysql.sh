@@ -8,4 +8,6 @@ echo "waiting for the machine to boot"
 sleep 30
 
 echo "will install mysql on ${NODE}"
+gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=mysql=true
+
 gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-mysql.sh | bash"
