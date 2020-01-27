@@ -10,17 +10,20 @@ then
 else
     MASTER="spark://${MASTER}:7077"
 fi
-CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true" --format="get(networkInterfaces[0].networkIP)")
+CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true OR labels.cassandra-seed=true" --format="get(networkInterfaces[0].networkIP)")
 
 NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
 
+JAVA="no"
 if [ -z "$NODE" ]
 then
     NODE="zeppelin"
-    gcloud compute instances create ${NODE} --zone ${ZONE} --machine-type ${MACHINE} --maintenance-policy "MIGRATE" --image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts" --boot-disk-size "40" --boot-disk-type "pd-standard" --boot-disk-device-name "${NODE}disk" --labels "zeppelin=true"
+    JAVA="-j yes"
+    echo "creating server ..."
+    gcloud compute instances create ${NODE} --zone ${ZONE} --machine-type ${MACHINE} --maintenance-policy "MIGRATE" --image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts" --boot-disk-size "10" --boot-disk-type "pd-standard" --boot-disk-device-name "${NODE}disk" --labels "zeppelin=true"
     echo "waiting for the server to boot..."
     sleep 25
-else    
+else  
     gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=zeppelin=true
 fi
 if [ ! -z "$CASSANDRA" ]
@@ -28,4 +31,4 @@ then
     CASSANDRA="-c ${CASSANDRA}"
 fi
 echo "will install zeppelin with master ${MASTER} and cassandra node ${CASSANDRA}"
-gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-zeppelin.sh | bash -s -- -m ${MASTER} ${CASSANDRA} -s zeplpassw! -d mysql:mysql-connector-java:8.0.18,com.databricks:spark-avro_2.11:4.0.0"
+gcloud compute ssh ${NODE} --zone ${ZONE} --command "wget -qO- https://raw.githubusercontent.com/academyofdata/spark/master/deploy-zeppelin.sh | bash -s -- -m ${MASTER} ${CASSANDRA} ${JAVA} -s zeplpassw! -d mysql:mysql-connector-java:8.0.18,com.databricks:spark-avro_2.11:4.0.0"
