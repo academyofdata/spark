@@ -3,11 +3,12 @@
 ZEP_VER="0.8.2"
 MIRROR="http://apache.mirror.iphh.net/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz"
 
-options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:nodownload" -o "s:c:p:m:d:n" -a -- "$@")
+options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:,java:nodownload" -o "s:c:p:m:d:j:n" -a -- "$@")
 eval set -- "$options"
 
 export port=9090
 export download=yes
+export java=no
 while true
 do
   case $1 in
@@ -30,6 +31,10 @@ do
         shift
         export master=$1
         ;;
+    -j|--java)
+        shift
+        export java=$1
+        ;;
     -d|--dependencies)
         shift
         export dependencies=$1
@@ -49,6 +54,13 @@ then
 else
 	PASSWORD='zeplnp@ss'
 fi
+
+if [ "$java" = "yes" ]; then
+  echo "Installing Java (OpenJDK flavor)..."
+  sudo apt-get update
+  sudo apt-get install -y openjdk-8-jdk
+fi
+
 
 if [ "$download" = "yes" ]
 then
