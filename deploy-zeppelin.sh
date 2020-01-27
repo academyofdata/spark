@@ -1,6 +1,7 @@
 #!/bin/bash
 #script that installs zeppelin with all dependencies and starts it
 ZEP_VER="0.8.2"
+MIRROR="http://apache.mirror.iphh.net/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz"
 
 options=$(getopt -l "setpass:,cassandra:,port:,master:,dependencies:nodownload" -o "s:c:p:m:d:n" -a -- "$@")
 eval set -- "$options"
@@ -52,7 +53,7 @@ fi
 if [ "$download" = "yes" ]
 then
   echo "getting Zeppelin Archive"
-  sudo wget -q -O /opt/zeppelin.tgz http://apache.javapipe.com/zeppelin/zeppelin-${ZEP_VER}/zeppelin-${ZEP_VER}-bin-all.tgz
+  sudo wget -q -O /opt/zeppelin.tgz $MIRROR
   echo "Unpacking Zeppelin into /opt"
   sudo tar -xzf /opt/zeppelin.tgz --directory /opt
   echo "Making Zeppelin available in /opt/zeppelin"
