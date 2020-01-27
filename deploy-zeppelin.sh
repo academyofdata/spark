@@ -121,8 +121,11 @@ then
     echo "replacing json ${orig} -> ${mod}"
     sudo cp /tmp/interpreter0.json /opt/zeppelin/conf/interpreter.json
     sleep 1
-    #we rely on the fact that a spark instalation already exists in /opt/spark
-    echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
+    if [ "$master" != "local[*]" ]
+    then
+        #we rely on the fact that a spark instalation already exists in /opt/spark
+    	echo "export SPARK_HOME=/opt/spark" | sudo tee /opt/zeppelin/conf/zeppelin-env.sh
+    fi
     restart="yes"
 fi
 if [ ! -z "$dependencies" ]
