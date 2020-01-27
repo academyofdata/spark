@@ -22,6 +22,7 @@ then
     sleep 25
 else    
     gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=zeppelin=true
+fi
 if [ ! -z "$CASSANDRA" ]
 then
     CASSANDRA="-c ${CASSANDRA}"
