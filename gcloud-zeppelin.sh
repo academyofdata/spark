@@ -1,14 +1,27 @@
 #!/bin/bash
 ZONE="europe-west1-d"
-#we install on the same machine as spark master
+MACHINE="n1-standard-2"
+
+#we install on the same machine as spark master, if no machine has sparkmaster label, we spin up a new server
 MASTER=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="get(networkInterfaces[0].networkIP)")
-MASTER="spark://${MASTER}:7077"
+if [ -z "$MASTER" ]
+then
+    MASTER="local[*]"
+else
+    MASTER="spark://${MASTER}:7077"
+fi
 CASSANDRA=$(gcloud compute instances list --filter="labels.cassandra=true" --format="get(networkInterfaces[0].networkIP)")
 
 NODE=$(gcloud compute instances list --filter="labels.sparkmaster=true" --format="value(name)")
 
-
-gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=zeppelin=true
+if [ -z "$NODE" ]
+then
+    NODE="zeppelin"
+    gcloud compute instances create ${NODE} --zone ${ZONE} --machine-type ${MACHINE} --maintenance-policy "MIGRATE" --image "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts" --boot-disk-size "40" --boot-disk-type "pd-standard" --boot-disk-device-name "${NODE}disk" --labels "zeppelin=true"
+    echo "waiting for the server to boot..."
+    sleep 25
+else    
+    gcloud compute instances add-labels ${NODE} --zone ${ZONE} --labels=zeppelin=true
 if [ ! -z "$CASSANDRA" ]
 then
     CASSANDRA="-c ${CASSANDRA}"
