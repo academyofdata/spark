@@ -59,9 +59,9 @@ then
   echo "Starting a Worker with ${MEM} MB (${MEMFACTOR} of total memory), ${CORES} cores and master ${masterurl}"
   sudo /opt/spark/sbin/start-slave.sh -c ${CORES} -m ${MEM}M ${masterurl}
   #executor settings valid for e.g. spark-shell on this machine
-  #echo "spark.master ${masterurl}" | sudo tee >> /opt/spark/conf/spark-defaults.conf
-  #echo "spark.executor.memory 1G" | sudo tee >> /opt/spark/conf/spark-defaults.conf
-  #echo "spark.executor.cores 1" | sudo tee >> /opt/spark/conf/spark-defaults.conf
+  echo "spark.master ${masterurl}" | sudo tee -a /opt/spark/conf/spark-defaults.conf
+  echo "spark.executor.memory 1G" | sudo tee -a /opt/spark/conf/spark-defaults.conf
+  echo "spark.executor.cores 1" | sudo tee -a /opt/spark/conf/spark-defaults.conf
  
 fi
 
